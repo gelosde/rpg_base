@@ -2,9 +2,12 @@
 ### descrição 
 
 Essa aplicação simula um jogo de RPG(Role-Player Game), onde o usuário pode se cadastrar, criar um personagem com uma classe e matar monstros para adquirir itens e subir de level
- <h3> Rotas Para admin  <h3>
- > /gameup/admin
- > > get: 
+
+<h3> Rotas Para admin  <h3>
+
+> /gameup/admin:
+ 
+>   get: 
   {
 <p>               "summary": "Lista de usuários",
 <p>               "description": "Endpoint responsável por listar todos os usuários cadastrados, com todos seus dados",
