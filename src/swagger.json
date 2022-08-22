@@ -1,0 +1,1099 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Gameup",
+        "description": "Essa aplicação simula um jogo de RPG(Role-Player Game), onde o usuário pode se cadastrar, criar um personagem com uma classe e matar monstros para adquirir itens e subir de level.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/gameup/admin": {
+            "get": {
+                "summary": "Lista de usuários",
+                "description": "Endpoint responsável por listar todos os usuários cadastrados, com todos seus dados",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": [
+                                            {
+                                                "id": "be668ff9-51b9-43cf-9f59-948dc02fe310",
+                                                "username": "jose",
+                                                "email": "jose@mail.com",
+                                                "phone": "99999999999",
+                                                "age": 20,
+                                                "address": "Avenida Nove de Julho, 999",
+                                                "character": {
+                                                    "name": "personagem",
+                                                    "level": 1,
+                                                    "xp": 0,
+                                                    "xp_needed": 100,
+                                                    "class": "mage",
+                                                    "inventory": []
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/admin/{email}": {
+            "get": {
+                "summary": "Lista um usuário pelo email",
+                "description": "Endpoint responsável por listar somente um usuário, com todos seus dados",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email para a busca do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description":"NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "message":"User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "id": "be668ff9-51b9-43cf-9f59-948dc02fe310",
+                                            "username": "jose",
+                                            "email": "jose@mail.com",
+                                            "phone": "99999999999",
+                                            "age": 20,
+                                            "address": "Avenida Nove de Julho, 999",
+                                            "character": {
+                                                "name": "personagem",
+                                                "level": 1,
+                                                "xp": 0,
+                                                "xp_needed": 100,
+                                                "class": "mage",
+                                                "inventory": []
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletar um usuário",
+                "description": "Endpoint responsável por deletar um usuário",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email para a deletar o usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description":"NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "message":"User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "NO CONTENT"
+                    }
+                }
+            }       
+        },
+        "/gameup/admin/items": {
+            "post": {
+                "summary": "Criar um item",
+                "description": "Endpoint responsável por criar um item",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Create Items"
+                            },
+                            "examples": {
+                                "items": {
+                                    "value": {
+                                        "name": "spike-sword",                 
+                                        "type": "common",
+                                        "size": 10,
+                                        "weight": 10,
+                                        "damage": 30,
+                                        "defense": 10,
+                                        "durability": 1000,
+                                        "effect": "attack",
+                                        "quantity": 10000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "items": {
+                                        "value": {
+                                            "message": "Item 'spike-sword' is already registered"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "items": {
+                                        "value": {
+                                            "id": "b553e516-85a7-4c53-a554-f3562b86f23c",
+                                            "name": "spike-sword",               
+                                            "type": "common",
+                                            "size": 10,
+                                            "weight": 10,
+                                            "damage": 30,
+                                            "defense": 10,
+                                            "durability": 1000,
+                                            "effect": "attack",
+                                            "quantity": 10000
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/admin/skills": {
+            "post": {
+                "summary": "Criar skill",
+                "description": "Endpoint responsável por criar uma skill",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Create Skills"
+                            },
+                            "examples": {
+                                "skills": {
+                                    "value": {
+                                        "name": "fire bomb",
+                                        "level_required": 1,
+                                        "type": "common",
+                                        "damage": 10,
+                                        "cost_skill": 1,
+                                        "type_target": "magic",
+                                        "cost_type": "mana",
+                                        "element_target": "fire",
+                                        "power_rank": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "skills": {
+                                        "value": {
+                                            "message": "Skill 'fire bomb' is already registered"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "skills": {
+                                        "value": {
+                                            "id": "7844d4bd-e3db-4962-a22a-f577f70095f8",
+                                            "name": "fire bomb",
+                                            "level_required": 1,
+                                            "type": "common",
+                                            "damage": 10,
+                                            "cost_skill": 1,
+                                            "type_target": "magic",
+                                            "cost_type": "mana",
+                                            "element_target": "fire",
+                                            "power_rank": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/admin/classes": {
+            "post": {
+                "summary": "Criar classe",
+                "description": "Endpoint responsável por criar classes",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Create Class"
+                            },
+                            "examples": {
+                                "class": {
+                                    "value": {
+                                        "name": "mage",
+                                        "status": {
+                                            "strength": 10,
+                                            "intelligency": 10,
+                                            "hp": 50,
+                                            "stamina": 100,
+                                            "mana": 100,
+                                            "speed": 10
+                                        },
+                                        "skills_name": ["fire bomb"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "class": {
+                                        "value": {
+                                            "message": "Class 'mage' is already registered"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "class": {
+                                        "value": {
+                                            "id": "556d2f54-b0fd-444c-b1a6-4125020e6bd3",
+                                            "name": "mage",
+                                            "status": {
+                                                "strength": 1,
+                                                "intelligency": 1,
+                                                "hp": 1,
+                                                "stamina": 1,
+                                                "mana": 1,
+                                                "speed": 1,
+                                                "id": "4f457e74-6e1f-41e6-972d-928aedb7ce17"
+                                            },
+                                            "skills": [
+                                                {
+                                                    "id": "c1e37b9d-4e72-47af-a68f-030c5034a194",
+                                                    "name": "fire",
+                                                    "level_required": 1,
+                                                    "type": "common",
+                                                    "damage": 10,
+                                                    "special_effect": "none",
+                                                    "cost_skill": 1,
+                                                    "type_target": "mana",
+                                                    "cost_type": "aa",
+                                                    "element_target": "lux",
+                                                    "power_rank": 1
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/admin/monsters": {
+            "post": {
+                "summary": "Criar monstro",
+                "description": "Endpoint responsável por criar um monstro",
+                "tags": ["Admin"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Create Monster"
+                            },
+                            "examples": {
+                                "monsters": {
+                                    "value": {
+                                        "name": "ogro",
+                                        "hp": 100,
+                                        "mana": "100",
+                                        "stamina": 10,
+                                        "damage": "10",
+                                        "xp_drop": 100,
+                                        "nivel": 1,
+                                        "quantity_drop": 1 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "monsters": {
+                                        "value": {
+                                            "message": "Monster 'ogro' is already registered"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "monsters": {
+                                        "value": {
+                                            "id": "f2defdb0-1b10-46e8-91a1-0109b85ef8d6",
+                                            "name": "ogro",
+                                            "hp": 100,
+                                            "mana": "100",
+                                            "stamina": 10,
+                                            "damage": "10",
+                                            "xp_drop": 100,
+                                            "nivel": 1,
+                                            "quantity_drop": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }  
+        },
+        "/gameup/user/register": {
+            "post": {
+                "summary": "Criação de usuário",
+                "description": "Endpoint responsável para a criação de um novo usuário",
+                "tags": ["User"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "register": {
+                                    "value": {
+                                        "username": "jose",
+                                        "password": "senhaForte",
+                                        "email": "jose@mail.com",
+                                        "phone": "99999999999",
+                                        "age": 20,
+                                        "address": "Avenida Nove de Julho, 999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "register": {
+                                        "value": {
+                                            "message": "jose@mail.com is already registered"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "register": {
+                                        "value": {
+                                            "id": "be668ff9-51b9-43cf-9f59-948dc02fe310",
+                                            "username": "jose",
+                                            "email": "jose@mail.com",
+                                            "phone": "99999999999",
+                                            "age": 20,
+                                            "address": "Avenida Nove de Julho, 999"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        },
+        "/gameup/user/login": {
+            "post": {
+                "summary": "Login do usuário",
+                "description": "Endpoint responsável para realizar login do usuário cadastrado",
+                "tags": ["User"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            },
+                            "examples": {
+                                "login": {
+                                    "value": {               
+                                        "email": "jose@mail.com",
+                                        "password": "senhaForte"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "login": {
+                                        "value": {
+                                            "message": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "UNAUTHORIZED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "login": {
+                                        "value": {
+                                            "message": "Wrong email or password. Try again!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "login": {
+                                        "value": {
+                                            "token": "4b72c6f34b72c6f3-6d0a-6a1-86c6-687d52de4fc7-6d0a-6a1-86c6-687d2c6f3-6d0a-6a1-86c6-687d52de4fc74b72c6f3-6d0a-6a1-86c6-687d52de4fc7"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/user": {
+            "patch": {
+                "summary": "Editar usuário",
+                "description": "Endpoint responsável para editar um ou mais dados do usuário",
+                "tags": ["User"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "user": {
+                                    "value": {               
+                                        "username": "maria"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "message": "Email already exists"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "id": "be668ff9-51b9-43cf-9f59-948dc02fe310",
+                                            "username": "maria",
+                                            "email": "jose@mail.com",
+                                            "phone": "99999999999",
+                                            "age": 20,
+                                            "address": "Avenida Nove de Julho, 999"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/classes": {
+            "get": {
+                "summary": "Lista de classes",
+                "description": "Endpoint responsável por listar todas as possíveis classes que um personagem pode escolher",
+                "tags": ["Class"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "classes": {
+                                        "value": [
+                                            {
+                                              "id": "9d5bc695-def6-49f8-bf8f-c78ba1f0d77e",
+                                              "name": "mage",
+                                              "status": {
+                                                "id": "91344002-7583-4255-9991-888bee8458e6",
+                                                "strength": 1,
+                                                "intelligency": 1,
+                                                "hp": 1,
+                                                "stamina": 1,
+                                                "mana": 1,
+                                                "speed": 1
+                                              },
+                                              "skills": [
+                                                {
+                                                  "id": "1dec10b5-3b47-4029-b127-c3285d67ca97",
+                                                  "name": "fire bomb",
+                                                  "level_required": 1,
+                                                  "type": "common",
+                                                  "damage": 10,
+                                                  "special_effect": null,
+                                                  "cost_skill": 1,
+                                                  "type_target": "mana",
+                                                  "cost_type": "aa",
+                                                  "element_target": "fire",
+                                                  "power_rank": 1
+                                                }
+                                              ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/character": {
+            "post": {
+                "summary": "Criação de personagem",
+                "description": "Endpoint responsável pela criação de um novo personagem",
+                "tags": ["Character"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Create Character"
+                            },
+                            "examples": {
+                                "character": {
+                                    "value": {               
+                                        "name": "Personagem",
+                                        "class_name": "Mage"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "409": {
+                        "description": "CONFLICT",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {
+                                        "value": {
+                                            "message": "Character name already exists"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {
+                                        "value": {
+                                            "message": "You already have a registered character"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {
+                                        "value": {
+                                            "message": "Class name 'Mage' not exists"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "CREATED",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {
+                                        "value": {
+                                            "name": "personagem",
+                                            "level": 1,
+                                            "xp": 0,
+                                            "xp_needed": 100,
+                                            "class": "mage",
+                                            "inventory": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/character?name=personagem": {
+            "get": {
+                "summary": "Busca de personagem pelo nome",
+                "description": "Endpoint responsável pela busca de personagem pelo nome",
+                "tags": ["Character"],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Nome do personagem para realizar a busca",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "BAD REQUEST",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {
+                                        "value": {
+                                            "message": "Please specify character name."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {      
+                                    "character": {                          
+                                        "value": {
+                                            "message": "Please specify character name."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "character": {                                
+                                        "value": {
+                                            "name": "personagem",
+                                            "class": "mage",
+                                            "level": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }    
+        },
+        
+        "/gameup/monster": {
+            "get": {
+                "summary": "Lista de monstros",
+                "description": "Endpoint responsável por listar todos os monstros",
+                "tags": ["Monster"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "monsters": {
+                                        "value": [
+                                            {
+                                                "monstername":{
+                                                    "name": "ogro",
+                                                    "lvl": 1
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gameup/monster?monster=Ogro": {
+            "get": {
+                "summary": "Busca de monstro",
+                "description": "Endpoint responsável por buscar um monstro pelo nome",
+                "tags": ["Monster"],
+                "parameters": [
+                    {
+                        "name": "monster",
+                        "in": "query",
+                        "description": "Nome do monstro",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description":"NOT FOUND",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "monsters": {
+                                        "value": {
+                                            "message":"Monster not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "monsters": {
+                                        "value": {
+                                            "monstername":{
+                                                "name": "ogro",
+                                                "lvl": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "required": ["username", "password", "email", "phone", "age", "address"],
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Login": {
+                "type": "object",
+                "required": [ "email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Create Character": {
+                "type": "object",
+                "required": [ "name", "class_name"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "class_name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Create Items": {
+                "type": "object",
+                "required": ["name", "type", "size", "weight", "damage", "defense", "durability", "effect", "quantity"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "number"
+                    },
+                    "weight": {
+                        "type": "number"
+                    },
+                    "damage": {
+                        "type": "number"
+                    },
+                    "defense": {
+                        "type": "number"
+                    },
+                    "durability": {
+                        "type": "number"
+                    },
+                    "effect": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Create Skills": {
+                "type": "object",
+                "required": ["name", "level_required", "type", "cost_skill", "type_target", "cost_type", "element_target", "power_rank"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "level_required": {
+                        "type": "number"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "damage": {
+                        "type": "number"
+                    },
+                    "special_effect": {
+                        "type": "string"
+                    },
+                    "cost_skill": {
+                        "type": "number"
+                    },
+                    "type_target": {
+                        "type": "string"
+                    },
+                    "cost_type": {
+                        "type": "string"
+                    },
+                    "element_target": {
+                        "type": "string"
+                    },
+                    "power_rank": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Create Monster": {
+                "type": "object",
+                "required": ["name", "hp", "mana", "stamina", "damage", "xp_drop", "nivel", "quantity_drop"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "hp": {
+                        "type": "number"
+                    },
+                    "mana": {
+                        "type": "number"
+                    },
+                    "stamina": {
+                        "type": "number"
+                    },
+                    "damage": {
+                        "type": "number"
+                    },
+                    "xp_drop": {
+                        "type": "number"
+                    },
+                    "nivel": {
+                        "type": "number"
+                    },
+                    "quantity_drop": {
+                        "type": "number"
+                    }
+                }
+            },
+            "Create Class": {
+                "type": "object",
+                "required": ["name", "status", "strength", "intelligency", "hp", "stamina", "mana", "speed", "skills_name"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "object"
+                    },
+                        "strength": {
+                            "type": "number"
+                        },
+                        "intelligency": {
+                            "type": "number"
+                        },
+                        "hp": {
+                            "type": "number"
+                        },
+                        "stamina": {
+                            "type": "number"
+                        },
+                        "mana": {
+                            "type": "number"
+                        },
+                        "speed": {
+                            "type": "number"
+                        },
+                    "skills_name": {
+                        "type": "array"
+                    } 
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
