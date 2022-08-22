@@ -2,8 +2,8 @@
   "name": "rpg",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/marcusvl/rpg.git",
-  "author": "marcusvl <marcusvlcastro@gmail.com>",
+  "repository": "https://github.com/gelosde/rpg_base.git",
+  "author": "marcusvl <angelokvieira@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
